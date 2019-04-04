@@ -1,10 +1,22 @@
 // _dirname是node.js中的一个全局变量，它指向当前执行脚本所在目录
 // path是node.js中提供的处理文件路径的小工具
+"use strict"
 const path = require('path');
 const os = require('os');
 const webpack = require('webpack');
 const HappyPack = require('happypack');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
+const BabelPolyfill = require('babel-polyfill');
+const glob = require('glob');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+var happyThreadPool = HappyPack.ThreadPool({
+  size: os.cpus().length
+});
 
 module.exports = {
   entry: {
@@ -12,12 +24,39 @@ module.exports = {
   },
   output: {
     path: path.join(__dirname, "dist"),
-    filename: "bundle.js"
+    publicPath: '/',
+    filename: 'js/[name]-[hash]' + '.js',
+    chunkFilename: 'js/[name]-[hash]' + '.js',
   },
   devServer: {
-    contentBase: './dist'
+    contentBase: false,
+    clientLogLevel: 'warning',
+    publicPath: '/',
+    hot: true,
+    progress: true,
+    overlay: { warnings: false, errors: true },
+    historyApiFallback: {
+      rewrites: [
+        { from: /.*/, to: path.posix.join('/', 'index.html') },
+      ],
+    },
+    compress: true,
+    inline: true,
+    port: 8083,
+    host: '127.0.0.1',
+    watchOptions: {
+      poll: false
+    }
   },
-  modules: {
+  plugins: [
+    new CleanWebpackPlugin('dist/*', {
+      root: __dirname,
+      verbose: true,
+      dry: false
+    }),
+
+  ],
+  module: {
     rules: [
       {
         test: /\.(js|jsx)$/,
