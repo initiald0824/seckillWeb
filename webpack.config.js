@@ -54,7 +54,13 @@ module.exports = {
       verbose: true,
       dry: false
     }),
-
+    new ExtractTextWebpackPlugin({
+      filename: 'css/[name]-[hash].css',
+      allChunks: true
+    }),
+    new OptimizeCSSPlugin({
+      cssProcessorOptions: { safe: true, map: { inline: false } }
+    }),
   ],
   module: {
     rules: [
