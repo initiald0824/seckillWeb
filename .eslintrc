@@ -1,0 +1,29 @@
+{
+  "extends": "react-app",
+  "globals": {
+    "window": true,
+    "React": false,
+    "ReactDOM": false
+  },
+  "rules": {
+    "import/no-webpack-loader-syntax": 0,
+    "no-console": ["warn", {"allow":  ["warn", "error"]}],
+    "no-multi-spaces": 1,
+    "no-unused-vars": "warn",
+    "react/jsx-tag-spacing": 1,    // 总是在自动关闭的标签前加一个空格，正常情况下也不需要换行
+    "jsx-quotes": 1,
+    "jsx-a11y/anchor-is-valid": "off",
+    "jsx-a11y/href-no-hash": "off",
+    "react/jsx-closing-bracket-location": 1,
+    "react/jsx-boolean-value": 1,
+    "react/no-string-refs": 1,
+    "react/self-closing-comp": 1,
+    "react/sort-comp": 1,
+    "react/jsx-pascal-case": 1
+  },
+  "parserOptions": {
+    "ecmaFeatures": {
+      "experimentablObjectRestSpread": true
+    }
+  }
+}
