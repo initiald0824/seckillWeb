@@ -9,10 +9,10 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
-const BabelPolyfill = require('babel-polyfill');
+const BabelPolyfill = require('@babel/polyfill');
 const glob = require('glob');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebPackPlugin = require('html-webpack-plugin');
 
 var happyThreadPool = HappyPack.ThreadPool({
   size: os.cpus().length
@@ -49,7 +49,7 @@ module.exports = {
     }
   },
   plugins: [
-    new CleanWebpackPlugin('dist/*', {
+    new CleanWebpackPlugin({
       root: __dirname,
       verbose: true,
       dry: false
@@ -61,6 +61,30 @@ module.exports = {
     new OptimizeCSSPlugin({
       cssProcessorOptions: { safe: true, map: { inline: false } }
     }),
+    new HtmlWebPackPlugin({
+      template: './src/index.html',
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        removeAttributeQuotes: true
+      },
+      filename: 'index.html'
+    }),
+    new CopyWebpackPlugin([
+      {
+        from: path.resolve(__dirname, './src/static'),
+        to: 'static',
+        ignore: ['.*']
+      },
+    ]),
+    new HappyPack({
+      id: 'happybabel',
+      loaders: ['babel-loader'],
+      threadPool: happyThreadPool,
+      verbose: true
+    }),
+    new webpack.NamedModulesPlugin(),
+    new webpack.HotModuleReplacementPlugin(),
   ],
   module: {
     rules: [
@@ -69,6 +93,8 @@ module.exports = {
         exclude: /node_modules/,
         enforce: 'pre',
         use: [{
+          loader: 'happypack/loader?id=happybabel',
+        }, {
           loader: 'babel-loader',
         }, {
           loader: 'eslint-loader',
@@ -79,6 +105,7 @@ module.exports = {
         }]
       },
       {
+        // antd样式处理
         test: /\.(css|less)$/,
         exclude: /node_modules/,
         include: /src/,
@@ -87,10 +114,8 @@ module.exports = {
           {
             loader: 'css-loader',
             options: {
-              minimize: process.env_NODE_ENV === 'production',
               importLoaders: 2,
-              localIdentName: '[name]-[local]-[hash-base64:5]',
-              modules: true
+              minimize: process.env_NODE_ENV === 'production'
             }
           },
           {
@@ -101,12 +126,7 @@ module.exports = {
               ]
             }
           },
-          {
-            loader: 'less-loader',
-            options: {
-              javascriptEnabled: true
-            }
-          }
+          'less-loader'
         ]
       },
       {
@@ -141,7 +161,88 @@ module.exports = {
             }
           ]
         })
+      },
+      {
+        test: /\.css$/,
+        exclude: /node_modules/,
+        include: /src/,
+        use: ExtractTextWebpackPlugin.extract({
+          fallback: 'style-loader',
+          use: [
+            {
+              loader: 'css-loader',
+              options: {
+                minimize: process.env.NODE_ENV === 'production',
+                importLoaders: 2,
+                localIdentName: '[name]-[local]-[hash:base64:5]',
+                modules: true
+              }
+            },
+            {
+              loader: 'postcss-loader',
+              options: {
+                plugins: (loader) => [
+                  require('autoprefixer')(),
+                ]
+              }
+            }
+          ]
+        })
+      },
+      {
+        test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+        loader: 'url-loader',
+        options: {
+          limit: 10000,
+          name: 'static/img/[name].[hash:7].[ext]'
+        }
+      },
+      {
+        test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
+        loader: 'url-loader',
+        options: {
+          limit: 10000,
+          name: 'static/media/[name].[hash:7].[ext]'
+        }
+      },
+      {
+        test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+        loader: 'url-loader',
+        options: {
+          limit: 10000,
+          name: 'static/fonts/[name].[hash:7].[ext]'
+        }
+      },
+      {
+        test: /\.html$/,
+        use: [{
+          loader: 'html-loader',
+          options: {
+            minimize: true
+          }
+        }]
       }
     ]
+  },
+  optimization: {
+    runtimeChunk: {
+      name: "mainfest"
+    },
+    splitChunks: {
+      cacheGroups:  {
+        commons: {
+          test: /[\\/]node_modules[\\/]/,
+          name: "vendor",
+          chunks: "all"
+        }
+      }
+    }
+  },
+  resolve: {
+    extensions: ['.js'],
+    alias: {
+      '@': path.join(__dirname, '/src'),
+      '@components': path.join(__dirname, '/src/components')
+    }
   }
 };
