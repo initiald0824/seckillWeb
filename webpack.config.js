@@ -20,6 +20,7 @@ var happyThreadPool = HappyPack.ThreadPool({
 
 module.exports = {
   entry: {
+    babel: '@babel/polyfill',
     main: path.join(__dirname, 'src/index.js'),
   },
   output: {
@@ -242,7 +243,9 @@ module.exports = {
     extensions: ['.js'],
     alias: {
       '@': path.join(__dirname, '/src'),
-      '@components': path.join(__dirname, '/src/components')
+      '@components': path.join(__dirname, '/src/components'),
+      '@utils': path.join(__dirname, '/src/utils'),
+      '@config': path.join(__dirname, '/src/config')
     }
   }
 };
