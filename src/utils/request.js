@@ -37,16 +37,22 @@ function apiAxios(method, url, params, success, failure) {
     }
   }
 
+  const method2Headers = {
+    'GET': {'Content-Type': 'application/json; charset=UTF-8'},
+    'POST': {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
+    'PUT': {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
+    'DELETE': {'Content-Type': 'application/json; charset=UTF-8'}
+  };
+
   axios({
     method: method,
-    url: url,
-    headers: url.type === 'json' ? { 'Content-Type': 'application/json; charset=UTF-8'} :
+    url: url.api,
+    headers: !url.type ? method2Headers['method'] : url.type === 'json' ? { 'Content-Type': 'application/json; charset=UTF-8'} :
       url.type === 'formData' ? {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'} :
         {'Content-Type': 'multipart/form-data; charset=UTF-8'},
     data: method === 'POST' || method === 'PUT' ? params : null,
     dataType: 'json',
     params: method === 'GET' || method === 'DELETE' ? params : null,
-    baseURL: url.baseUrl,
     withCredentials: true
   }).then((res) => {
     if (res.data.code === 0) {

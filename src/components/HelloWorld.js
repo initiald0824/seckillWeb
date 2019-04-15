@@ -4,7 +4,10 @@ import request from '@utils/request';
 class HelloWorld extends Component {
 
   componentDidMount() {
-    request.get('/api/test', {a: 1}, function(res) {
+    let url = {
+      api: '/api/test',
+    };
+    request.get(url, {a: 1}, function(res) {
     }, function(res) {
     })
   }
