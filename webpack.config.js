@@ -114,15 +114,15 @@ module.exports = {
       {
         // antd样式处理
         test: /\.(css|less)$/,
-        exclude: /node_modules/,
-        include: /src/,
+        include: /node_modules/,
+        exclude: /src/,
         use: [
           {loader: 'style-loader'},
           {
             loader: 'css-loader',
             options: {
               importLoaders: 2,
-              minimize: process.env_NODE_ENV === 'production'
+              // minimize: process.env_NODE_ENV === 'production'
             }
           },
           {
@@ -146,7 +146,7 @@ module.exports = {
             {
               loader: 'css-loader',
               options: {
-                minimize: process.env.NODE_ENV === 'production',
+                // minimize: process.env.NODE_ENV === 'production',
                 importLoaders: 2,
                 localIdentName: '[name]-[local]-[hash:base64:5]',
                 modules: true
@@ -179,7 +179,7 @@ module.exports = {
             {
               loader: 'css-loader',
               options: {
-                minimize: process.env.NODE_ENV === 'production',
+                // minimize: process.env.NODE_ENV === 'production',
                 importLoaders: 2,
                 localIdentName: '[name]-[local]-[hash:base64:5]',
                 modules: true
@@ -251,7 +251,8 @@ module.exports = {
       '@': path.join(__dirname, '/src'),
       '@components': path.join(__dirname, '/src/components'),
       '@utils': path.join(__dirname, '/src/utils'),
-      '@config': path.join(__dirname, '/src/config')
+      '@config': path.join(__dirname, '/src/config'),
+      '@assets': path.join(__dirname, '/assets')
     }
   }
 };
