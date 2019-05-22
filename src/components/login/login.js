@@ -3,6 +3,8 @@ import { Form, Input, Icon, Checkbox, Button } from 'antd';
 import styles from './login.less';
 import loginBackground from '@assets/login.jpg';
 import request from '@utils/request.js';
+import { salt } from "@components/login/constant";
+import md5 from 'js-md5';
 
 const { Item } = Form;
 
@@ -24,10 +26,12 @@ class LoginForm extends Component {
           api: '/api/login',
           type: 'json'
         };
-        request.get(url, values, (res) => {
+        const { mobile, password } = values;
+        request.get(url, { mobile, password: md5(password+salt) }, (res) => {
           console.log('res', res);
+        }, (err) => {
+          console.log('err', err)
         });
-        console.log('Received values of form: ', values);
       }
     })
   }
