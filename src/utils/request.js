@@ -2,6 +2,8 @@ import axios from 'axios';
 
 axios.defaults.withCredentials = true;
 
+const service = axios.create();
+
 function toType(obj) {
   return ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase();
 }
@@ -44,7 +46,7 @@ function apiAxios(method, url, params, success, failure) {
     'DELETE': {'Content-Type': 'application/json; charset=UTF-8'}
   };
 
-  axios({
+  service({
     method: method,
     url: url.api,
     headers: !url.type ? method2Headers['method'] : url.type === 'json' ? { 'Content-Type': 'application/json; charset=UTF-8'} :

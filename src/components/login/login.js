@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import { Form, Input, Icon, Checkbox, Button } from 'antd';
 import styles from './login.less';
 import loginBackground from '@assets/login.jpg';
@@ -28,7 +29,7 @@ class LoginForm extends Component {
         };
         const { mobile, password } = values;
         request.get(url, { mobile, password: md5(password+salt) }, (res) => {
-          console.log('res', res);
+          this.props.history.push('/goods');
         }, (err) => {
           console.log('err', err)
         });
@@ -74,4 +75,4 @@ class LoginForm extends Component {
 
 const Login = Form.create({ name: 'login_form' })(LoginForm);
 
-export default Login;
+export default withRouter(Login);
