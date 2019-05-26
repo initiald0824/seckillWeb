@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getToken } from "@utils/uitl";
 
 axios.defaults.withCredentials = true;
 
@@ -25,6 +26,13 @@ function filterNull(o) {
  }
  return o;
 }
+
+service.interceptors.request.use(config => {
+  config.headers['Authorization'] = getToken();
+  return config
+}, error => {
+  return Promise.reject(error)
+});
 
 function apiAxios(method, url, params, success, failure) {
   if (url.type === 'json') {
