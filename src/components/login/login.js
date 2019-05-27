@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Form, Input, Icon, Checkbox, Button } from 'antd';
+import { Form, Input, Icon, Checkbox, Button } from 'antd/lib/index';
 import styles from './login.less';
 import loginBackground from '@assets/login.jpg';
-import request from '@utils/request.js';
+import request from '@utils/../../utils/request';
 import { salt } from "@components/login/constant";
 import md5 from 'js-md5';
+import { setToken } from "@utils/uitl";
+import { login } from "@/services/login/login";
 
 const { Item } = Form;
 
@@ -23,13 +25,10 @@ class LoginForm extends Component {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        let url = {
-          api: '/api/login',
-          type: 'json'
-        };
         const { mobile, password } = values;
-        request.get(url, { mobile, password: md5(password+salt) }, (res) => {
-          this.props.history.push('/goods');
+        login({ mobile, password: md5(password+salt) }, (res) => {
+          setToken(res.data.token);
+          this.props.history.push('/goods')
         }, (err) => {
           console.log('err', err)
         });

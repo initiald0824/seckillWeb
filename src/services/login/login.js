@@ -1,13 +1,17 @@
-import { login as loginUrl } from '@config/apiUrl.js'
 import request from '@utils/request.js';
 
-
-export async function login(params) {
+export function login(params, successCallback, errorCallback) {
   let url = {
-    api: loginUrl,
+    api: '/api/login',
     type: 'json'
   };
-  return request.get(url, params, (res) => {
+  request.get(url, params, successCallback, errorCallback)
+}
 
-  });
+export function authorization(params, successCallback, errorCallback) {
+  let url = {
+    api: '/api/authorization',
+    type: 'json'
+  };
+  request.get(url, params, successCallback, errorCallback)
 }

@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
-import Login from '@components/login/login';
-import Goods from '@components/goods/goods';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { routerConfig } from "@/router/router";
 
 class App extends Component {
   render() {
     return (
       <Router>
-        <Route path="/login" component={Login} />
-        <Route path="/goods" component={Goods} />
+        <Switch>
+          <Route path="/" component={Home} />
+          <Route path="/login" component={Login} />
+          <Route path="/goods" component={Goods} />
+        </Switch>
       </Router>
     )
   }
