@@ -10,10 +10,34 @@ class FrontendAuth extends Component {
 
     const token = getToken();
 
-    authorization()
+    let isLogin = false;
+    authorization({ token }, (res) => {
+      isLogin = true;
+    }, (err) => {
+      console.log('err', err)
+    });
 
-    const targetRrouterConfig = config.find(v => v.path === pathname);
+    const targetRouterConfig = config.find(v => v.path === pathname);
 
+    if (targetRouterConfig && !targetRouterConfig.auth && !isLogin) {
+      const { component } = targetRouterConfig;
+      return <Route exact path={pathname} component={component} />
+    }
+
+    if (isLogin) {
+      // 如果是登录状态
+      if (pathname === '/login') {
+        return <Redirect to='/' />
+      } else {
+        if (targetRouterConfig) {
+          return <Route path={pathname} component={targetRouterConfig.component} />
+        }
+      }
+    } else {
+      if (targetRouterConfig && targetRouterConfig.auth) {
+        return <Redirect to='/login'/>
+      }
+    }
   }
 }
 

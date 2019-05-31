@@ -1,6 +1,6 @@
-import { home } from '@/components/home';
-import { login } from '@/components/login';
-import { goods } from '@/components/goods';
+import home from '@/components/home/home';
+import login from '@/components/login/login';
+import goods from '@/components/goods/goods';
 
 
 export const routerConfig = [
