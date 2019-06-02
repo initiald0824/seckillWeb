@@ -3,10 +3,8 @@ import { withRouter } from 'react-router-dom';
 import { Form, Input, Icon, Checkbox, Button } from 'antd/lib/index';
 import styles from './login.less';
 import loginBackground from '@assets/login.jpg';
-import request from '@utils/../../utils/request';
 import { salt } from "@components/login/constant";
 import md5 from 'js-md5';
-import { setToken } from "@utils/uitl";
 import { login } from "@/services/login/login";
 
 const { Item } = Form;
@@ -26,8 +24,7 @@ class LoginForm extends Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         const { mobile, password } = values;
-        login({ mobile, password: md5(password+salt) }, (res) => {
-          setToken(res.data.token);
+        login({ mobile, password: md5(password+salt) }, () => {
           this.props.history.push('/goods')
         }, (err) => {
           console.log('err', err)

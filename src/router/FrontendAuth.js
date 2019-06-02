@@ -1,30 +1,29 @@
 import React, {Component} from 'react';
 import { Route, Redirect } from "react-router-dom";
-import { getToken } from "@utils/uitl";
 import { authorization } from "@/services/login/login";
 
 class FrontendAuth extends Component {
+
   render() {
     const { location, config } = this.props;
     const { pathname } = location;
 
-    const token = getToken();
-
-    let isLogin = false;
-    authorization({ token }, (res) => {
-      isLogin = true;
-    }, (err) => {
-      console.log('err', err)
-    });
-
     const targetRouterConfig = config.find(v => v.path === pathname);
 
-    if (targetRouterConfig && !targetRouterConfig.auth && !isLogin) {
+    let isLogin = localStorage.getItem('isLogin');
+
+    if (isLogin !== 'true') {
+      authorization({}, () => {
+        localStorage.setItem('isLogin', 'true');
+      })
+    }
+
+    if (targetRouterConfig && !targetRouterConfig.auth && isLogin !== 'true') {
       const { component } = targetRouterConfig;
       return <Route exact path={pathname} component={component} />
     }
 
-    if (isLogin) {
+    if (isLogin === 'true') {
       // 如果是登录状态
       if (pathname === '/login') {
         return <Redirect to='/' />
@@ -35,7 +34,7 @@ class FrontendAuth extends Component {
       }
     } else {
       if (targetRouterConfig && targetRouterConfig.auth) {
-        return <Redirect to='/login'/>
+        return <Redirect to='/login' />
       }
     }
   }

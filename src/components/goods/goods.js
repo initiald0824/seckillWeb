@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import request from '@utils/request.js';
 
 
 class Goods extends Component {

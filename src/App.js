@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Switch } from 'react-router-dom';
 import { routerConfig } from "@/router/router";
-import FrontendAuth from '@/App.js';
+import FrontendAuth from '@/router/FrontendAuth';
 
 class App extends Component {
+
   render() {
     return (
       <Router>
