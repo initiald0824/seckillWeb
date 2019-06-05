@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { Route, Redirect } from "react-router-dom";
 import { authorization } from "@/services/login/login";
+import pathToRegexp from 'path-to-regexp';
 
 class FrontendAuth extends Component {
 
@@ -8,7 +9,7 @@ class FrontendAuth extends Component {
     const { location, config } = this.props;
     const { pathname } = location;
 
-    const targetRouterConfig = config.find(v => v.path === pathname);
+    const targetRouterConfig = config.find(v => pathToRegexp(v.path).exec(pathname));
 
     let isLogin = localStorage.getItem('isLogin');
 
