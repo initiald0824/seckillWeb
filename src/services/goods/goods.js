@@ -7,3 +7,11 @@ export function querySeckillGoods(params, successCallback, errorCallback) {
   };
   request.get(url, params, successCallback, errorCallback)
 }
+
+export function queryGoodsDetail(params, successCallback, errorCallback) {
+  let url = {
+    api: '/api/goodsDetail',
+    type: 'json'
+  };
+  request.get(url, params, successCallback, errorCallback)
+}

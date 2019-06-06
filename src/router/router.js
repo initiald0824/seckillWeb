@@ -1,4 +1,3 @@
-import home from '@/components/home/home';
 import login from '@/components/login/login';
 import goods from '@/components/goods/goods';
 import goodsDetail from '@/components/goods/goodsDetail'
@@ -7,7 +6,7 @@ import goodsDetail from '@/components/goods/goodsDetail'
 export const routerConfig = [
   {
     path: '/',
-    component: home,
+    component: goods,
     auth: true
   },
   {

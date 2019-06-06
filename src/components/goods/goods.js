@@ -41,7 +41,7 @@ class Goods extends Component {
         dataIndex: 'goodsDetail',
         render: (text, row) => {
           return (
-            <Link to={'/goodsDetail/'+row.id}>{text}</Link>
+            <Link to={'/goodsDetail/'+row.id}>详情</Link>
           )
         }
       }
