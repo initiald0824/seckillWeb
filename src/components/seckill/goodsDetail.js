@@ -4,6 +4,7 @@ import pathToRegexp from 'path-to-regexp';
 import { queryGoodsDetail } from "@/services/goods/goods";
 import { Card, Row, Col, Button } from 'antd';
 import dateformat from 'dateformat';
+import { execSeckill } from "@/services/seckill/seckill";
 
 class GoodsDetail extends Component {
 
@@ -19,8 +20,11 @@ class GoodsDetail extends Component {
   componentWillMount () {
     this.init();
     this.timer = setInterval(() => {
-      if (this.state.goodsDetail && this.state.goodsDetail.remainSeconds >= 0) {
+      if (this.state.goodsDetail && this.state.goodsDetail.remainSeconds > 0) {
         let goodsDetail = this.state.goodsDetail;
+        if (goodsDetail.remainSeconds === 1) {
+          goodsDetail.seckillStatus = 'started'
+        }
         goodsDetail.remainSeconds = goodsDetail.remainSeconds - 1;
         this.setState({
           goodsDetail: goodsDetail
@@ -79,6 +83,11 @@ class GoodsDetail extends Component {
   }
 
   seckill () {
+    execSeckill({
+      goodsId: this.state.goodsId
+    }, (res) => {
+      console.log('res', res)
+    })
   }
 
   render () {
@@ -120,7 +129,8 @@ class GoodsDetail extends Component {
               <Col span={8}>商品原价</Col>
               <Col span={8}>{this.state.goodsDetail.goodsPrice}</Col>
               <Col span={8}>
-                <Button onClick={this.seckill} type="primary">立即秒杀</Button>
+                <Button onClick={this.seckill}
+                        disabled={this.state.goodsDetail.seckillStatus !== 'started'} type="primary">立即秒杀</Button>
               </Col>
             </Row>
             <hr />
