@@ -1,6 +1,8 @@
 import login from '@/components/login/login';
 import goods from '@/components/goods/goods';
-import goodsDetail from '@components/seckill/goodsDetail'
+import goodsDetail from '@/components/seckill/goodsDetail'
+import orderDetail from '@/components/seckill/orderDetail';
+import seckillFail from '@/components/seckill/seckillFail';
 
 
 export const routerConfig = [
@@ -21,6 +23,16 @@ export const routerConfig = [
   {
     path: '/goodsDetail/:id',
     component: goodsDetail,
+    auth: true
+  },
+  {
+    path: '/orderDetail/:id',
+    component: orderDetail,
+    auth: true
+  },
+  {
+    path: '/seckillFail',
+    component: seckillFail,
     auth: true
   }
 ];

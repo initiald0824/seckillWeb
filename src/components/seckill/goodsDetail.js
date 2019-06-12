@@ -86,7 +86,10 @@ class GoodsDetail extends Component {
     execSeckill({
       goodsId: this.state.goodsId
     }, (res) => {
-      console.log('res', res)
+      const orderInfo = res.data.orderInfo;
+      this.props.history.push('/orderDetail/' + orderInfo.id);
+    }, () => {
+      this.props.history.push('/seckillFail')
     })
   }
 

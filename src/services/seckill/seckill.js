@@ -5,5 +5,13 @@ export function execSeckill(params, successCallback, errorCallback) {
     api: '/api/seckill',
     type: 'formData'
   };
-  request.post(url, params, successCallback, errorCallback)
+  request.post(url, params, successCallback, errorCallback);
+}
+
+export function queryOrderDetail(params, successCallback, errorCallback) {
+  let url = {
+    api: '/api/orderDetail',
+    type: 'json'
+  };
+  request.get(url, params, successCallback, errorCallback);
 }
