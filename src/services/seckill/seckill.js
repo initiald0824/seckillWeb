@@ -15,3 +15,19 @@ export function queryOrderDetail(params, successCallback, errorCallback) {
   };
   request.get(url, params, successCallback, errorCallback);
 }
+
+export function getSecillStatus(params, successCallback, errorCallback) {
+  let url = {
+    api: '/api/seckillStatus',
+    type: 'json'
+  };
+  request.get(url, params, successCallback, errorCallback);
+}
+
+export function getSeckillPath(params, successCallback, errorCallback) {
+  let url = {
+    api: '/api/seckillPath',
+    type: 'json'
+  };
+  request.get(url, params, successCallback, errorCallback);
+}

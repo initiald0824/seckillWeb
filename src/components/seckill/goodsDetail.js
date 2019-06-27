@@ -4,7 +4,7 @@ import pathToRegexp from 'path-to-regexp';
 import { queryGoodsDetail } from "@/services/goods/goods";
 import { Card, Row, Col, Button } from 'antd';
 import dateformat from 'dateformat';
-import { execSeckill } from "@/services/seckill/seckill";
+import { execSeckill, getSecillStatus, getSeckillPath } from "@/services/seckill/seckill";
 
 class GoodsDetail extends Component {
 
@@ -12,7 +12,8 @@ class GoodsDetail extends Component {
     super(props);
     this.state = {
       goodsId: null,
-      goodsDetail: null
+      goodsDetail: null,
+      seckillPath: null
     };
     this.seckill = this.seckill.bind(this);
   }
@@ -82,12 +83,47 @@ class GoodsDetail extends Component {
     return res;
   }
 
-  seckill () {
+  getSeckillStatus (goodsId) {
+    getSecillStatus({ goodsId: goodsId }, (res) => {
+      const result = res.data;
+      if (result < 0) {
+        this.props.history.push('/seckillFail');
+      } else if (result > 0) {
+        this.props.history.push('/orderDetail/' + result);
+      } else {
+        setTimeout(() => {
+          this.getSeckillStatus(goodsId);
+        }, 50)
+      }
+    })
+  }
+
+  async getSeckillPath () {
+    return new Promise((resolve, reject) => {
+      getSeckillPath(({ goodsId: this.state.goodsId }), (res) => {
+        if (res.code === 0) {
+          this.setState({
+            seckillPath: res.data
+          });
+          resolve();
+        } else {
+          reject(new Error(res.message));
+        }
+      }, () => {
+        reject(new Error('获取秒杀接口失败'))
+      })
+    });
+  }
+
+  async seckill () {
+    await this.getSeckillPath();
     execSeckill({
+      seckillPath: this.state.seckillPath,
       goodsId: this.state.goodsId
     }, (res) => {
-      const orderInfo = res.data.orderInfo;
-      this.props.history.push('/orderDetail/' + orderInfo.id);
+      if (res.code === 0 ) {
+        this.getSeckillStatus(this.state.goodsId)
+      }
     }, () => {
       this.props.history.push('/seckillFail')
     })
